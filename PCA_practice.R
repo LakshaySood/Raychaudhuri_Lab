@@ -1,0 +1,10 @@
+library(datasets)
+
+iris_data = head(iris, 150)
+col_means = colMeans(iris_data[, 1:4])
+iris_svd = svd(iris_data[, 1:4] - rep(col_means, times = 150))
+iris_svd_trans = lapply(iris_svd, t)
+covar = 1/149 * as.data.frame(iris_svd$u %*% iris_svd$d %*% iris_svd_trans$d %*% iris_svd_trans$u)
+pcas = eigen(covar)
+plot(iris_data[, 3:4])
+arrows(0, 0, pcas$vectors[, 1], pcas$vectors[, 2], col = "red")
